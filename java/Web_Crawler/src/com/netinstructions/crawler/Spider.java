@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Spider{
 	// Fields
-	private static final int MAX_PAGES_TO_SEARCH = 100;
+	private static final int MAX_PAGES_TO_SEARCH = 2;
 	private Set<String> pagesVisited = new HashSet<String>();
 	private List<String> pagesToVisit = new LinkedList<String>();
 	
@@ -44,6 +44,45 @@ public class Spider{
 		}
 		
 		System.out.println(String.format("**Done** Visited %s web pages(s)", this.pagesVisited.size()));		
+	}	
+	
+	/**
+	   * Similar to search function. Instead of testing whether searchWord exists 
+	   * this function returns the occurrence of the searchWord.
+	   * 
+	   * @param url
+	   *            - The starting point of the spider
+	   * @param searchWord
+	   *            - The word or string that you are searching for
+	   */
+	public void totalNumber(String url, String searchWord) {
+		int totalOccurrence = 0;
+		
+		while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
+			String currentUrl;
+			SpiderLeg leg = new SpiderLeg();
+			if (this.pagesToVisit.isEmpty()) {
+				currentUrl = url;
+				this.pagesVisited.add(url);
+			} else {
+				currentUrl = this.nextUrl();			
+			}
+			
+			leg.crawl(currentUrl); //Lots of stuff happening here.
+			                       //Look at the crawl method in SpiderLeg
+			boolean success = leg.searchForWord(searchWord);
+			if (success) {
+				int currentOccurrence = leg.countWord(searchWord);
+				totalOccurrence += currentOccurrence;
+				System.out.println(String.format("**Success** %s Word %s found at %s", 
+						           currentOccurrence, searchWord, currentUrl));			
+			}
+			
+			this.pagesToVisit.addAll(leg.getLinks());		
+		}
+		
+		System.out.println(String.format("**Done** Visited %s web pages(s)", this.pagesVisited.size()));
+		System.out.println(String.format("Total %s Word %s found at %s", totalOccurrence, searchWord, url));
 	}	
 	
 	/**

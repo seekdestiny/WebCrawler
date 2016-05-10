@@ -72,6 +72,30 @@ class SpiderLeg {
 		return bodyText.toLowerCase().contains(searchWord.toLowerCase());
 	}
 	
+	/**
+     * Performs a target word count on the body of on the HTML document that is retrieved. This method should
+     * only be called after a successful searchForWord.
+     * 
+     * @param searchWord
+     *            - The word or string to look for
+     * @return word occurrence of searchWord on current web page
+     */
+	public int countWord(String searchWord) {
+		String bodyText = this.htmlDocument.body().text().toLowerCase();
+		int lastIndex = 0;
+		int count = 0;
+		while (lastIndex != -1) {
+			lastIndex = bodyText.indexOf(searchWord.toLowerCase(), lastIndex);
+			
+			if (lastIndex != -1) {
+				count++;
+				lastIndex += searchWord.length();
+			}		
+		}
+		
+		return count;
+	}
+	
 	public List<String> getLinks() {
 		return this.links;
 	}

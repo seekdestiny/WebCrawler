@@ -10,6 +10,7 @@ public class SpiderTest{
 	
 	public static void main(String[] args) {
 	    Spider spider = new Spider();
-	    spider.search("http://sears.com/", "Arrivals");
+	    //spider.search("http://www.bestbuy.com/", "digital camera");
+	    spider.totalNumber("http://www.bestbuy.com", "digital camera");
 	}
 }
