@@ -3,6 +3,7 @@ package com.netinstructions.crawler;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -95,6 +96,46 @@ class SpiderLeg {
 		}
 		
 		return count;
+	}
+	
+	/**
+     * Parse HTML document and count key word density
+     * 
+     * @param dictionary
+     *            - HashMap to sort key word as key and density as value
+     * @return word occurrence of searchWord on current web page
+     */
+	public void countKeyWords(Map<String, Integer> dictionary) {
+		readBody(dictionary); 
+		readHead(dictionary);
+	}
+	
+	public void readBody(Map<String, Integer> dictionary) {
+		String bodyText = this.htmlDocument.body().text().toLowerCase();
+		String[] bodyWord = bodyText.split("\\s+");
+		for (String keyWord : bodyWord) {
+			if (!StopWords.isStopWords(keyWord) && !StopWords.isNumeric(keyWord)) {
+			    if (dictionary.containsKey(keyWord)) {
+				    dictionary.put(keyWord, dictionary.get(keyWord) + 1);				
+			    } else {
+				    dictionary.put(keyWord, 1);	
+			    }
+			}
+		}
+	}
+	
+	public void readHead(Map<String, Integer> dictionary) {
+		String headText = this.htmlDocument.head().text().toLowerCase();
+		String[] headWord = headText.split("\\s+");
+		for (String keyWord : headWord) {
+			if (!StopWords.isStopWords(keyWord) && !StopWords.isNumeric(keyWord)) {
+			    if (dictionary.containsKey(keyWord)) {
+				    dictionary.put(keyWord, dictionary.get(keyWord) + 1);				
+			    } else {
+				    dictionary.put(keyWord, 1);	
+			    }
+			}
+		}
 	}
 	
 	public List<String> getLinks() {

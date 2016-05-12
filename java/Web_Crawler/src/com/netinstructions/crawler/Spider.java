@@ -1,11 +1,15 @@
 package com.netinstructions.crawler;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Comparator;
 
 public class Spider{
 	// Fields
@@ -90,7 +94,6 @@ public class Spider{
 	
 	/**
 	   * Count all words density and store results in the dictionary 
-	   * this function returns the occurrence of the searchWord.
 	   * 
 	   * @param url
 	   *            - The starting point of the spider
@@ -117,18 +120,50 @@ public class Spider{
 	}	
 	
 	/**
-	   * print the content of the dictionary sorted by word value in dictionary map
-	   * number of printed word can be decided by user
+	   * print the content of the dictionary sorted by word value in dictionary map.
+	   * number of printed word can be decided by user.
 	   * 
 	   * @param topKWord
 	   *            - First K words user are interested in
 	   */
 	
 	public void printDictionary(int topKWord) {
+		Map<String, Integer> sortedMap = sortByComparator(dictionary);
+		for (Map.Entry<String, Integer> entry: sortedMap.entrySet()) {
+			if (topKWord == 0) break;
+			System.out.println("[Key] : " + entry.getKey()
+			                              + " [Value] : " + entry.getValue());
+			topKWord--;
+		}	
+	}
+	
+	/**
+	 * sort a unsorted map by value
+	 * return a sorted map
+	 * 
+	 * @param unsortMap
+	 * @return
+	 */
+	private Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap) {
+		//Convert Map to List
+		List<Map.Entry<String, Integer>> list = 
+				new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
 		
+		//Sort list with comparator, to compare the Map values
+		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+				return (o2.getValue()).compareTo(o1.getValue());
+			}			
+		});
 		
+		//Convert sorted map back to a Map
+		Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+		for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+			Map.Entry<String, Integer> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
 		
-		
+		return sortedMap;	
 	}
 	
 	/**
