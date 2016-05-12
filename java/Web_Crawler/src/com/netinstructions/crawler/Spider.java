@@ -1,15 +1,18 @@
 package com.netinstructions.crawler;
 
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.List;
+import java.util.Map;
 
 public class Spider{
 	// Fields
-	private static final int MAX_PAGES_TO_SEARCH = 2;
+	private static final int MAX_PAGES_TO_SEARCH = 1;
 	private Set<String> pagesVisited = new HashSet<String>();
 	private List<String> pagesToVisit = new LinkedList<String>();
+	private Map<String, Integer> dictionary = new HashMap<String, Integer>();
 	
 	/**
 	   * Our main launching point for the Spider's functionality. Internally it creates spider legs
@@ -84,6 +87,49 @@ public class Spider{
 		System.out.println(String.format("**Done** Visited %s web pages(s)", this.pagesVisited.size()));
 		System.out.println(String.format("Total %s Word %s found at %s", totalOccurrence, searchWord, url));
 	}	
+	
+	/**
+	   * Count all words density and store results in the dictionary 
+	   * this function returns the occurrence of the searchWord.
+	   * 
+	   * @param url
+	   *            - The starting point of the spider
+	   */
+	public void wordDensityAnalyze(String url) {		
+		while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
+			String currentUrl;
+			SpiderLeg leg = new SpiderLeg();
+			if (this.pagesToVisit.isEmpty()) {
+				currentUrl = url;
+				this.pagesVisited.add(url);
+			} else {
+				currentUrl = this.nextUrl();			
+			}
+			
+			leg.crawl(currentUrl); //Lots of stuff happening here.
+			                       //Look at the crawl method in SpiderLeg
+			leg.countKeyWords(this.dictionary);			
+			System.out.println(String.format("Words counted at %s", currentUrl));
+			this.pagesToVisit.addAll(leg.getLinks());		
+		}
+		
+		System.out.println(String.format("**Done** Visited %s web pages(s)", this.pagesVisited.size()));
+	}	
+	
+	/**
+	   * print the content of the dictionary sorted by word value in dictionary map
+	   * number of printed word can be decided by user
+	   * 
+	   * @param topKWord
+	   *            - First K words user are interested in
+	   */
+	
+	public void printDictionary(int topKWord) {
+		
+		
+		
+		
+	}
 	
 	/**
 	   * Returns the next URL to visit (in the order that they were found). We also do a check to make

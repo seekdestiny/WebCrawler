@@ -42,6 +42,7 @@ class SpiderLeg {
 	    	Elements linksOnPage = htmlDocument.select("a[href]");
 	    	System.out.println("Found (" + linksOnPage.size() + ") links");
 	    	for (Element link: linksOnPage) {
+	    		if (link.absUrl("href").contains("#")) continue;
 	    		this.links.add(link.absUrl("href"));
 	    	}
 	    	return true;
