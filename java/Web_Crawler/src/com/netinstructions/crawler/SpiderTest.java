@@ -1,5 +1,7 @@
 package com.netinstructions.crawler;
 
+import java.util.Scanner;
+
 public class SpiderTest{
 	/**
      * This is our test. It creates a spider (which creates spider legs) and crawls the web.
@@ -10,11 +12,12 @@ public class SpiderTest{
 	
 	public static void main(String[] args) {
 	    Spider spider = new Spider();
-	    //spider.search("http://www.bestbuy.com/", "digital camera");
-	    //spider.totalNumber("http://www.sears.com", "digital camera");
-	    String url = "http://www.sears.com";
-	    //String url = "http://www.amazon.com/Cuisinart-CPT-122-Compact-2-Slice-Toaster/dp/B009GQ034C/ref=sr11?s=kitchen&ie=UTF8&qid=1431620315&sr=1-1&keywords=toaster";
+	    Scanner scanner = new Scanner (System.in);
+	    System.out.println("Enter the url to be crawled: ");
+	    String url = scanner.nextLine();
+	    System.out.println("Enter the number of keywords you need: ");
+	    int number = scanner.nextInt();
 	    spider.wordDensityAnalyze(url);
-	    spider.printDictionary(100);
+	    spider.printDictionary(number);
 	}
 }
